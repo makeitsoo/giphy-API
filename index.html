@@ -68,65 +68,97 @@
 </div> <!-- close container -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script type="text/javascript">
-          // Initial array of movies
-      var giphs = ["The Matrix", "The Notebook", "Mr. Nobody", "The Lion King"];
+          // Initial array of sports
+      var giphs = ["Football", "Rugby", "Baseball", "Motocross"];
 
       // displayGiph function re-renders the HTML to display the appropriate content
       function displayGiph() {
 
         var giph = $(this).attr("data-name");
-        var queryURL = "https://www.omdbapi.com/?t=" + giph + "&y=&plot=short&apikey=40e9cece";
+        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+        giph + "&api_key=dc6zaTOxFJmzC&limit=10" ;
 
-        // Creating an AJAX call for the specific movie button being clicked
+        // Creating an AJAX call for the specific giph button being clicked
         $.ajax({
           url: queryURL,
           method: "GET"
         }).done(function(response) {
 
-          // Creating a div to hold the movie
-          var giphDiv = $("<div class='giph'>");
+          console.log(queryURL);
+          console.log(response);
 
-          // Storing the rating data
-          var rating = response.Rated;
+          // storing the data from the AJAX request in the results variable
+          var results = response.data;
+          console.log(results);
 
-          // Creating an element to have the rating displayed
-          var pOne = $("<p>").text("Rating: " + rating);
+                    // Looping through each result item
+          for (var i = 0; i < results.length; i++) {
 
-          // Displaying the rating
-          giphDiv.append(pOne);
+            // Creating and storing a div tag
+            var giphDiv = $("<div>");
 
-          // Storing the release year
-          var released = response.Released;
+            // Creating a paragraph tag with the result item's rating
+            var p = $("<p>").text("Rating: " + results[i].rating);
 
-          // Creating an element to hold the release year
-          var pTwo = $("<p>").text("Released: " + released);
+            // Creating and storing an image tag
+            var giphImage = $("<img>");
+            // Setting the src attribute of the image to a property pulled off the result item
+            giphImage.attr("src", results[i].images.fixed_height.url);
 
-          // Displaying the release year
-          giphDiv.append(pTwo);
+            // Appending the paragraph and image tag to the giphDiv
+            giphDiv.append(p);
+            giphDiv.append(giphImage);
 
-          // Storing the plot
-          var plot = response.Plot;
+            // Prependng the giphDiv to the HTML page in the "#gifs-appear-here" div
+            $("#giphy-view").prepend(giphDiv);
+          }
 
-          // Creating an element to hold the plot
-          var pThree = $("<p>").text("Plot: " + plot);
 
-          // Appending the plot
-          giphDiv.append(pThree);
+          // Creating a div to hold the giph
+          // var giphDiv = $("<div class='giph'>");
 
-          // Retrieving the URL for the image
-          var imgURL = response.Poster;
+          // // Storing the rating data
+          // var rating = response.Rated;
 
-          // Creating an element to hold the image
-          var image = $("<img>").attr("src", imgURL);
+          // // Creating an element to have the rating displayed
+          // var pOne = $("<p>").text("Rating: " + rating);
 
-          // Appending the image
-          giphDiv.append(image);
+          // // Displaying the rating
+          // giphDiv.append(pOne);
+
+          // // Storing the release year
+          // var released = response.Released;
+
+          // // Creating an element to hold the release year
+          // var pTwo = $("<p>").text("Released: " + released);
+
+          // // Displaying the release year
+          // giphDiv.append(pTwo);
+
+          // // Storing the plot
+          // var plot = response.Plot;
+
+          // // Creating an element to hold the plot
+          // var pThree = $("<p>").text("Plot: " + plot);
+
+          // // Appending the plot
+          // giphDiv.append(pThree);
+
+          // // Retrieving the URL for the image
+          // var imgURL = response.Poster;
+
+          // // Creating an element to hold the image
+          // var image = $("<img>").attr("src", imgURL);
+
+          // // Appending the image
+          // giphDiv.append(image);
 
           // Putting the entire giph above the previous all the other giphs
-          $("#giphy-view").prepend(giphDiv);
-        });
+          // $("#giphy-view").prepend(giphDiv);
 
-      }
+        }); // close ajax response function
+
+      } // close displayGiph function
 
       // Function for displaying giph data
       function renderButtons() {
