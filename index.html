@@ -8,6 +8,20 @@
 	<!--link bootswatch -->
 		<link rel="stylesheet" href="https://bootswatch.com/3/darkly/bootstrap.min.css">
 
+    <style>
+
+    img {
+      width: 48%;
+      height: auto;
+      float:left; 
+      margin-top: 5px;
+      margin-bottom: 5px;
+      margin-right: 5px;
+      margin-left:5px;
+    }
+
+    </style>
+
 
 </head>
 <body>
@@ -69,7 +83,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script type="text/javascript">
           // Initial array of sports
-      var giphs = ["Football", "Rugby", "Baseball", "Motocross"];
+      var giphs = ["NFL", "Rugby", "Baseball", "Motocross", "Snowmobiling"];
 
       // displayGiph function re-renders the HTML to display the appropriate content
       function displayGiph() {
@@ -91,7 +105,7 @@
           var results = response.data;
           console.log(results);
 
-                    // Looping through each result item
+          // Looping through each result item
           for (var i = 0; i < results.length; i++) {
 
             // Creating and storing a div tag
@@ -109,52 +123,9 @@
             giphDiv.append(p);
             giphDiv.append(giphImage);
 
-            // Prependng the giphDiv to the HTML page in the "#gifs-appear-here" div
+            // Prependng the giphDiv to the HTML page in the "#giphy-view" div
             $("#giphy-view").prepend(giphDiv);
-          }
-
-
-          // Creating a div to hold the giph
-          // var giphDiv = $("<div class='giph'>");
-
-          // // Storing the rating data
-          // var rating = response.Rated;
-
-          // // Creating an element to have the rating displayed
-          // var pOne = $("<p>").text("Rating: " + rating);
-
-          // // Displaying the rating
-          // giphDiv.append(pOne);
-
-          // // Storing the release year
-          // var released = response.Released;
-
-          // // Creating an element to hold the release year
-          // var pTwo = $("<p>").text("Released: " + released);
-
-          // // Displaying the release year
-          // giphDiv.append(pTwo);
-
-          // // Storing the plot
-          // var plot = response.Plot;
-
-          // // Creating an element to hold the plot
-          // var pThree = $("<p>").text("Plot: " + plot);
-
-          // // Appending the plot
-          // giphDiv.append(pThree);
-
-          // // Retrieving the URL for the image
-          // var imgURL = response.Poster;
-
-          // // Creating an element to hold the image
-          // var image = $("<img>").attr("src", imgURL);
-
-          // // Appending the image
-          // giphDiv.append(image);
-
-          // Putting the entire giph above the previous all the other giphs
-          // $("#giphy-view").prepend(giphDiv);
+          } // close for loop
 
         }); // close ajax response function
 
