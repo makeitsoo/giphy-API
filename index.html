@@ -7,15 +7,13 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	<!--link bootswatch -->
 		<link rel="stylesheet" href="https://bootswatch.com/3/darkly/bootstrap.min.css">
-
+  <!-- CSS -->
     <style>
-
     img {
       width: 48%;
       height: auto;
       float:left; 
       margin: 5px 5px 5px 5px;
-
     }
 
     .giph {
@@ -23,16 +21,12 @@
       margin-left: 5px;
       margin-bottom:5px;
     }
-
     </style>
-
 
 </head>
 <body>
-
 <!-- page container -->
   <div class="container content">
-
   	<!-- buttons section -->
 	<div class="row buttonRow">
 		<div class="col-md-12">
@@ -41,7 +35,6 @@
           <h3 class="panel-title">Search GIFs - Pick a Sport</h3>
         </div>
         <div id="buttons-view" class="panel-body">
-              
         </div> <!-- close panel body -->
       </div> <!--panel close-->
 		</div> <!--close col -->
@@ -67,7 +60,6 @@
           <div class="panel-heading">
             <h3 class="panel-title">Looking for other sports gifs?</h3>
           </div>
-
           <div class="panel-body">
 				<form class="giph-form">
           <div class="form-group">
@@ -76,18 +68,20 @@
             <br>
             <input type="submit" class="btn btn-default btn-sm" id="searchButton" value="Add">
           </div>
-
 				</form> <!--close form -->
           </div> <!-- close panel body -->
         </div> <!-- close panel -->
       </div> <!-- close col-md-4 -->
     </div> <!-- close row -->
-
 </div> <!-- close container -->
+
+<!-- jQuery DSN--> 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<!-- JavaScript -->
   <script type="text/javascript">
           // Initial array of sports
-      var giphs = ["American Football", "Soccer", "Baseball", "Motocross", "Snowmobiling","Monster Truck", "Nascar", "Basketball", "Dodgeball", "Golf", "Hockey", "Beer Pong"];
+      var giphs = ["American Football", "Soccer", "Baseball", "Motocross", "Snowmobiling","Monster Truck", "Nascar", "Basketball", "Dodgeball", "Golf", "Hockey", "Snowboarding"];
 
       // displayGiph function re-renders the HTML to display the appropriate content
       function displayGiph() {
@@ -96,82 +90,77 @@
         var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
         giph + "&api_key=dc6zaTOxFJmzC&limit=10" ;
 
-        // Creating an AJAX call for the specific giph button being clicked
+        // AJAX call for the specific giph button being clicked
         $.ajax({
           url: queryURL,
           method: "GET"
         }).done(function(response) {
-
           // console.log(queryURL);
-          console.log(response);
+          // console.log(response);
 
-          // storing the data from the AJAX request in the results variable
+          // storing data from AJAX request in var "results" 
           var results = response.data;
-          // console.log(results);
-
           // Looping through each result item
           for (var i = 0; i < results.length; i++) {
-
             // Creating and storing a div tag
             var giphDiv = $("<div>");
-
             // Creating a paragraph tag with the result item's rating
             var p = $("<p>").text("Rating: " + results[i].rating);
-
             // Creating and storing an image tag
             var giphImage = $("<img>");
-            // Setting the src attribute of the image to a property pulled off the result item
+            // Setting the src attr of the img with data frm ajax
             giphImage.attr("src", results[i].images.fixed_height.url);
+            // Setting a wildcard attr "data-still" for the img by pinging differnt image URL in ajax call
             giphImage.attr("data-still", results[i].images.fixed_height_still.url) ;
+            // Setting a wildcard attr "data-animate" for the img by pinging differnt image URL in ajax call
             giphImage.attr("data-animate", results[i].images.fixed_height.url);
             giphImage.attr("data-state", "animate");
             // Adding a class of giph to our button
-            // console.log(giphImage);
             giphImage.addClass("gif");
-            console.log(giphImage);
+            // console.log(giphImage);
             // Appending the paragraph and image tag to the giphDiv
             giphDiv.append(p);
             giphDiv.append(giphImage);
-            // console.log(giphDiv);
             // Prependng the giphDiv to the HTML page in the "#giphy-view" div
             $("#giphy-view").prepend(giphDiv);
-            // console.log(giphImage);
-
           } // close for loop
 
 ///////////////////////////////
-               // WRITE CODE HERE for stopping/starting animation
-
+      // Functions with event lister for stopping/starting animation
             // when any gif is clicked...
             $(".gif").on("click", function() {
-                console.log("print this - click function firing")
-                console.log(results);
-
+                // console.log(results);
+              // create a var that stores value of data-state attribute -> currently: "animate"
               var state = $(this).attr("data-state");
-              console.log(state);
-                // for (var i = 0; i < results.length; i++) {
-                //   giphImage.attr("src", results[i].images.fixed_height_still.url);
-              //   console.log(giphImage);
-              // }
+              // console.log(state);
+
+              // if value currently set to "animate"...
+              if (state === "animate") {
+                // change it to "still" (to ping still URL)
+                $(this).attr("src", $(this).attr("data-still"));
+                $(this).attr("data-state", "still");
+              }
+              // if value currently set to "still"...
+              else if (state === "still") {
+                // change it to "animate" (to ping animate URL)
+                $(this).attr("src", $(this).attr("data-animate"));
+                $(this).attr("data-state", "animate");
+              }
             })
 //////////////////////////////
-
         }); // close ajax response function
-
       } // close displayGiph function
 
       // Function for displaying giph data
       function renderButtons() {
 
-        // Deleting the giohs prior to adding new giphs
-        // (this is necessary otherwise you will have repeat buttons)
+        // clearing out old giphs prior to adding new giphs (prevent dupes)
         $("#buttons-view").empty();
 
         // Looping through the array of giphs
         for (var i = 0; i < giphs.length; i++) {
 
-          // Then dynamicaly generating buttons for each giph in the array
-          // This code $("<button>") is all jQuery needs to create the beginning and end tag. (<button></button>)
+          // dynamicaly generating buttons for each giph in the array
           var a = $("<button>");
           // Adding a class of giph to our button
           a.addClass("giph");
@@ -185,75 +174,24 @@
         }
       }
 
-      // This function handles events when a giph button is clicked
+      // When a giph button is clicked...
       $("#searchButton").on("click", function(event) {
         event.preventDefault();
         // This line grabs the input from the textbox
         var giph = $(".form-control").val().trim();
 
-        // Adding giph from the textbox to our array
+        // Adds giph value from the textbox to our array
         giphs.push(giph);
 
-        // Calling renderButtons which handles the processing of our giph array
+        // Calling renderButtons function which handles the processing of giph array
         renderButtons();
       });
 
-      // Adding a click event listener to all elements with a class of "giph"
+      // click event listener to ALL elements with a class of "giph"
       $(document).on("click", ".giph", displayGiph);
 
       // Calling the renderButtons function to display the intial buttons
       renderButtons();
-
-
-// function stops and starts gifs when clicked 
-    $(".gif").on("click", function() {
-        console.log("print this - click function firing")
-       // Creating an AJAX call for the specific giph button being clicked
-        $.ajax({
-          url: queryURL,
-          method: "GET"
-        }).done(function(response) {
-
-          console.log(queryURL);
-          console.log(response);
-
-          // storing the data from the AJAX request in the results variable
-          var results = response.data;
-          console.log(results);
-        });
-        // After we complete steps 1 and 2 we'll be able to pause gifs from giphy.
-
-        // STEP TWO: make a variable named state and then store the image's data-state into it.
-        // Use the .attr() method for this.
-        var state = $(this).attr("data-state");
-        console.log(state);
-        // ============== FILL IN CODE HERE FOR STEP TWO =========================
-
-        // 
-
-        // =============================================
-
-        // STEP THREE: Check if the variable state is equal to 'still',
-        // then update the src attribute of this image to it's data-animate value,
-        if (state === "still") {
-          $(this).attr("src", $(this).attr("data-animate"));
-          $(this).attr("data-state", "animate");
-        }
-        // and update the data-state attribute to 'animate'.
-
-        // If state is equal to 'animate', then update the src attribute of this
-        // image to it's data-still value and update the data-state attribute to 'still'
-        // ============== FILL IN CODE HERE FOR STEP THREE =========================
-        else if (state === "animate") {
-          $(this).attr("src", $(this).attr("data-still"));
-          $(this).attr("data-state", "still");
-        }
-        // ==============================================
-
-        // STEP FOUR: open the file in the browser and click on the images.
-        // Then click again to pause.
-    });
-
 
 
   </script>
